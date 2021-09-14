@@ -1,0 +1,4 @@
+result/*
+*.o
+msa_main
+swap/*
