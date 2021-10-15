@@ -9,3 +9,4 @@ int BLASTaligncommand(char *center, char *common, char *progfolder, char *progna
 void checkprofilealign(char *progfolder, char *programname); // check the existance profile align program
 int profilealigncommand(char *filelist, char *center, int alignmode, char *progfolder, char *progname); // profilealign command processor
 double naivepairscore11( char *seq1, char *seq2, int penal, int seq_type); // SP Scores (one by one)
+char *get_exe_path(char *buf, int count); // find the program path

@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 // command function
 
@@ -425,4 +427,25 @@ double naivepairscore11( char *seq1, char *seq2, int penal, int seq_type )
 	if(s1) free( s1 );
 	if(s2) free( s2 );
 	return( vali );
+}
+
+
+char *get_exe_path(char *buf, int count)
+{
+    int i;
+    int rslt = readlink("/proc/self/exe", buf, count - 1);
+    if (rslt < 0 || (rslt >= count - 1))
+    {
+        return NULL;
+    }
+    buf[rslt] = 0;
+    for (i = rslt; i >= 0; i--)
+    {
+        if (buf[i] == '/' || buf[i] == '\\')  // '/' in Linux, '\\' in Windows
+        {
+            buf[i + 1] = 0;
+            break;
+        }
+    }
+    return buf;
 }
