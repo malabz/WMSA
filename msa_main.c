@@ -7,7 +7,7 @@
 #if REPORTCOSTS
 #include <time.h>
 #endif
-#define VERSION "0.2.0"
+#define VERSION "0.3.0"
 #define SHOWVERSION reporterr( "%s (%s, %d-bit) Version " VERSION "\n\n", "MSA align", (seq_type == 1) ? "nuc" : ((seq_type == 0) ? "unknown" : "aa"), sizeof(int *) * 8 )
 // #define FILESAVE
 
@@ -154,7 +154,7 @@ void arguments(int argc, char *argv[])
 	}
     if( argc != 0 ) 
     {
-        reporterr( "options: Check source file !\n" );
+        reporterr( "Please type wmsa -H or -? to get help.\n" );
         exit( 1 );
     }
 }
@@ -195,19 +195,10 @@ int main(int argc, char **argv)
 		starttime = time(NULL);
 #endif
     /* Part 0: process program path && make temp folder */
-    // program path
-    char *programfolder = AllocateCharVec(PATH_MAX + 100);
-    programfolder = realpath(argv[0], programfolder);
     // get the program folder
-    k = strlen(programfolder);
-    for(i = k - 1; i >= 0; -- i)
-    {
-        if(programfolder[i] == '/' || programfolder[i] == '\\') // '/' in Linux, '\\' in Windows
-        {
-            programfolder[i] = 0;
-            break;
-        }
-    }
+    char *programfolder = AllocateCharVec(PATH_MAX + 100);
+    programfolder = get_exe_path(programfolder, PATH_MAX + 100);
+    if(printdebug) puts(programfolder);
     // now the value programfolder is the right value, and the last place of the folder name is not '/'.
     if(maketmpfolder())
     {
