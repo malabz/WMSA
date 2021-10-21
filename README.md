@@ -18,7 +18,21 @@ make install # program is installed on /usr/bin by default
 wmsa -H # help message on this program
 ```
 
-You also can download source code on the release. 
+You also can download source code on the release.
+
+If you are an MACOS user, please use the following `make` command:
+
+```bash
+make all THREADS=16 NOOPENMP=yes
+```
+
+in order to avoid the bug on `openmp` library.
+
+You can also use our program in `conda` :
+
+```bash
+conda install wmsa -c wym6912 
+```
 
 ## How to upgrade this program
 

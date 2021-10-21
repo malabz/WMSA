@@ -1,21 +1,21 @@
 #include "io.h"
 #include "msa.h"
 
-int myatoi( char *in )
+int myatoi( char *in, char before )
 {
 	if( in == NULL )
 	{
-		fprintf( stderr, "Error in myatoi()\n" );
+		fprintf( stderr, "No argument on -%c.\nPlease check your command, or type \'wmsa -H\' for more help.\n", before );
 		exit( 1 );
 	}
 	return( atoi( in ) );
 }
 
-double myatof( char *in )
+double myatof( char *in, char before )
 {
 	if( in == NULL )
 	{
-		fprintf( stderr, "Error in myatof()\n" );
+		fprintf( stderr, "No argument on -%c.\nPlease check your command, or type \'wmsa -H\' for more help.\n", before );
 		exit( 1 );
 	}
 	return( atof( in ) );
