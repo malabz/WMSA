@@ -7,7 +7,7 @@
 #if REPORTCOSTS
 #include <time.h>
 #endif
-#define VERSION "0.3.0"
+#define VERSION "0.3.1"
 #define SHOWVERSION reporterr( "%s (%s, %d-bit) Version " VERSION "\n\n", "MSA align", (seq_type == 1) ? "nuc" : ((seq_type == 0) ? "unknown" : "aa"), sizeof(int *) * 8 )
 // #define FILESAVE
 
@@ -81,35 +81,35 @@ void arguments(int argc, char *argv[])
                     goto nextoption;
 				// MAFFT arguments
 				case 'V':
-					ppenalty_dist = myatof( *++ argv );
+					ppenalty_dist = myatof( *++ argv, c );
 					-- argc;
 					goto nextoption;
 				case 'f':
-					ppenalty = myatof( *++ argv );
+					ppenalty = myatof( *++ argv, c );
 					-- argc;
 					goto nextoption;
 				case 'z':
-					fftthreshold = myatoi( *++ argv );
+					fftthreshold = myatoi( *++ argv, c );
 					-- argc; 
 					goto nextoption;
 				case 'w':
-					fftWinSize = myatoi( *++ argv );
+					fftWinSize = myatoi( *++ argv, c );
 					-- argc;
 					goto nextoption;
                 case 'b':
-                    alignband = myatoi(*++ argv);
+                    alignband = myatoi(*++ argv, c);
                     -- argc;
                     goto nextoption;
                 case 'T':
-                    threads = myatoi(*++ argv);
+                    threads = myatoi(*++ argv, c);
                     -- argc;
                     goto nextoption;
                 case 'S':
-                    nmax_shift = myatoi(*++ argv);
+                    nmax_shift = myatoi(*++ argv, c);
                     -- argc;
                     goto nextoption;
                 case 'B':
-                    BLOSUM = myatoi(*++ argv);
+                    BLOSUM = myatoi(*++ argv, c);
                     -- argc;
                     goto nextoption;
                 case 'A':
@@ -123,7 +123,7 @@ void arguments(int argc, char *argv[])
                     break;
 				// CD-HIT arguments
 				case 'c':
-					cdhitsim = myatof( *++ argv );
+					cdhitsim = myatof( *++ argv, c );
                     if(cdhitsim >= 1.0 || cdhitsim <= 0.0) 
                     {
                         reporterr("Warning: cd-hit-sim is out of (0, 1), will ignore. \n");
@@ -132,7 +132,7 @@ void arguments(int argc, char *argv[])
 					-- argc;
 					goto nextoption;
                 case 'M':
-                    maxmemory = myatoi(*++ argv);
+                    maxmemory = myatoi(*++ argv, c);
                     -- argc;
                     goto nextoption;
                 // common
@@ -144,7 +144,7 @@ void arguments(int argc, char *argv[])
                     print_help_message();
                     exit(0);
                 default:
-                    reporterr( "illegal option %c\n", c );
+                    reporterr( "Illegal option %c. Please type wmsa -H or -? to get help.\n", c );
                     argc = 0;
                     break;
             }
@@ -222,14 +222,14 @@ int main(int argc, char **argv)
     char **center_name = NULL, **center_seq = NULL;
 
     /* Part 2.2: staralign on the code && write center sequence order file */
-    reporterr("BLASTalign...\n");
+    reporterr("Clusteralign...\n");
     // first check the existance of this program
-    checkBLASTalign(programfolder, "mafft/staralign");
+    checkBLASTalign(programfolder, "submafft/staralign");
     for(i = 0; i < cluster_seq; ++ i)
     {
         sprintf(cmdstr2, "%stmp_%d.clstr", tmpdir, i);
         sprintf(cmdstr3, "%stmp_%d.center", tmpdir, i);
-        BLASTaligncommand(cmdstr3, cmdstr2, programfolder, "mafft/staralign");
+        BLASTaligncommand(cmdstr3, cmdstr2, programfolder, "submafft/staralign");
         reporterr("\rSTEP %d / %d", i + 1, cluster_seq);
     }
     /* Part 2.3: Write center sequence order file */
@@ -244,10 +244,10 @@ int main(int argc, char **argv)
     
     /* Part 3: profile-profile align */
     reporterr("profile merging... ");
-    checkprofilealign(programfolder, "mafft/profilealign");
+    checkprofilealign(programfolder, "submafft/profilealign");
     sprintf(cmdstr3, "%scluster_order", tmpdir);
     sprintf(cmdstr2, "%stmp", tmpdir);
-    profilealigncommand(cmdstr3, cmdstr2, alignmode, programfolder, "mafft/profilealign");
+    profilealigncommand(cmdstr3, cmdstr2, alignmode, programfolder, "submafft/profilealign");
     reporterr("done. \n");
 
 #if REPORTCOSTS

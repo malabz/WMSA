@@ -1,5 +1,5 @@
 [submodule "mafft"]
-	path = mafft
+	path = submafft
 	url = ssh://git@github.com/wym6912/mafft-twomodule
 [submodule "cd-hit"]
 	path = cd-hit

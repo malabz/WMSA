@@ -3,8 +3,15 @@ CC = gcc
 CFLAGS = -O3
 INSTALLFOLDER = /usr/bin
 CDHITFOLDER = $(INSTALLFOLDER)/cd-hit
-MAFFTFOLDER = $(INSTALLFOLDER)/mafft
+MAFFTFOLDER = $(INSTALLFOLDER)/submafft
 # You can edit this folder in order to install the program to another place
+
+# If in MAC OS X, please not use -fopenmp
+NOOPENMP = no
+
+ifeq ($(NOOPENMP), yes)
+	NOOPENMPFLAG = openmp=no
+endif
 
 # Comment out the above line if your compiler 
 # does not support TLS (thread-local strage).
@@ -39,8 +46,8 @@ msa_main.o : msa_main.c $(HEADER)
 io.o : io.c $(HEADER)
 	$(CC) $(MYCFLAGS) -c io.c 
 
-mtxutl.o : ./mafft/mtxutl.c 
-	$(CC) $(MYCFLAGS) -c ./mafft/mtxutl.c 
+mtxutl.o : ./submafft/mtxutl.c 
+	$(CC) $(MYCFLAGS) -c ./submafft/mtxutl.c 
 
 constants.o : constants.c
 	$(CC) $(MYCFLAGS) -c constants.c
@@ -49,19 +56,19 @@ function.o : function.c function.h
 	$(CC) $(MYCFLAGS) -c function.c
 
 clean:
-	rm *.o cd-hit/*.o mafft/*.o tmp* wmsa cd-hit/cd-hit cd-hit/cd-hit-454 cd-hit/cd-hit-est mafft/staralign mafft/disttbfast
+	rm *.o cd-hit/*.o submafft/*.o tmp* wmsa cd-hit/cd-hit cd-hit/cd-hit-454 cd-hit/cd-hit-est submafft/staralign submafft/disttbfast
 	rm -rf swap
 
 all:
-	cd mafft && make -j$(THREADS)
-	cd cd-hit && make -j$(THREADS)
+	cd submafft && make -j$(THREADS)
+	cd cd-hit && make -j$(THREADS) $(NOOPENMPFLAG)
 	make -j$(THREADS)
 
 install: 
 	mkdir -p $(CDHITFOLDER) $(MAFFTFOLDER)
 	cp wmsa $(INSTALLFOLDER)
 	cp ./cd-hit/cd-hit ./cd-hit/cd-hit-est $(CDHITFOLDER)
-	cp ./mafft/profilealign ./mafft/staralign $(MAFFTFOLDER)
+	cp ./submafft/profilealign ./submafft/staralign $(MAFFTFOLDER)
 
 uninstall:
 	rm $(INSTALLFOLDER)/wmsa

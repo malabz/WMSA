@@ -7,13 +7,13 @@
 #include <ctype.h>
 #include <limits.h>
 #include <stdarg.h>
-#include "mafft/mtxutl.h"
+#include "submafft/mtxutl.h"
 
 #define N 5000000
 #define B 256
 
-int myatoi( char *in ); // atoi + Expection on null string
-double myatof( char *in ); // atof + Expection on null string
+int myatoi( char *in, char before ); // atoi + Expection on null string
+double myatof( char *in, char before ); // atof + Expection on null string
 void reporterr( const char *str, ... ); // Using stderr on error information
 int myfgets(char s[], int l, FILE *fp); // fgets
 int getnumlenandtype( FILE *fp, int seq_type ); // get the number and type of sequences, return the type of the sequences
