@@ -118,6 +118,13 @@ int maketmpfolder()
     return system_spawn("/bin/sh", argv, NULL);
 }
 
+int movefile()
+{
+    char *argv[] = {"sh", "-c", cmdstr, NULL};
+    reporterr("Info: only one cluster in cluster alignment, moved the file into result.\n");
+    return system_spawn("/bin/sh", argv, NULL);
+}
+
 void cleantmpfile()
 {
     sprintf(cmdstr, "rm -rf %s tmp", tmpdir);

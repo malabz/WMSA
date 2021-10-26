@@ -7,7 +7,7 @@
 #if REPORTCOSTS
 #include <time.h>
 #endif
-#define VERSION "0.3.1"
+#define VERSION "0.3.2"
 #define SHOWVERSION reporterr( "%s (%s, %d-bit) Version " VERSION "\n\n", "MSA align", (seq_type == 1) ? "nuc" : ((seq_type == 0) ? "unknown" : "aa"), sizeof(int *) * 8 )
 // #define FILESAVE
 
@@ -23,6 +23,7 @@ void print_help_message()
     reporterr("-T: use threads in cd-hit and staralign\n");
     reporterr("-p: Calcuate SP Scores after alignment\n");
     reporterr("-d: print debug info on profilealign, staralign and cd-hit*\n");
+    reporterr("-v: only print version\n");
     reporterr("== MAFFT common arguments ==\n");
     reporterr("-V, -f, -S: ppenalty_dist, penalty, nmax_shift\n");
     reporterr("-z, -w: fftthreshold, fftWinsize\n");
@@ -33,6 +34,11 @@ void print_help_message()
     reporterr("== CD-HIT arugments ==\n");
     reporterr("-c: threshold on cd-hit to cluster\n");
     reporterr("-M: max memory for CD-HIT\n");
+}
+
+void print_version()
+{
+    reporterr("WMSA verison %s\n", VERSION);
 }
 
 void arguments(int argc, char *argv[])
@@ -143,6 +149,9 @@ void arguments(int argc, char *argv[])
                 case '?':
                     print_help_message();
                     exit(0);
+                case 'v':
+                    print_version();
+                    exit(0);
                 default:
                     reporterr( "Illegal option %c. Please type wmsa -H or -? to get help.\n", c );
                     argc = 0;
@@ -242,14 +251,22 @@ int main(int argc, char **argv)
     fclose(cmdd);
     reporterr("\ndone. \n");
     
-    /* Part 3: profile-profile align */
-    reporterr("profile merging... ");
-    checkprofilealign(programfolder, "submafft/profilealign");
-    sprintf(cmdstr3, "%scluster_order", tmpdir);
-    sprintf(cmdstr2, "%stmp", tmpdir);
-    profilealigncommand(cmdstr3, cmdstr2, alignmode, programfolder, "submafft/profilealign");
-    reporterr("done. \n");
-
+    if(cluster_seq == 1)
+    {
+        /* no need to do part 3 */
+        sprintf(cmdstr, "mv %stmp_0.clstr.res %s", tmpdir, outputfile);
+        if(movefile()) reporterr("Moving file failed\n");
+    }
+    else
+    {
+        /* Part 3: profile-profile align */
+        reporterr("profile merging... ");
+        checkprofilealign(programfolder, "submafft/profilealign");
+        sprintf(cmdstr3, "%scluster_order", tmpdir);
+        sprintf(cmdstr2, "%stmp", tmpdir);
+        profilealigncommand(cmdstr3, cmdstr2, alignmode, programfolder, "submafft/profilealign");
+        reporterr("done. \n");
+    }
 #if REPORTCOSTS
     reporterr( "\nmsa align, real = %f min\n", (float)(time(NULL) - starttime)/60.0 );
 #endif
