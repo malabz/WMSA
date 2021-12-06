@@ -7,7 +7,7 @@
 #if REPORTCOSTS
 #include <time.h>
 #endif
-#define VERSION "0.3.2"
+#define VERSION "0.3.3"
 #define SHOWVERSION reporterr( "%s (%s, %d-bit) Version " VERSION "\n\n", "MSA align", (seq_type == 1) ? "nuc" : ((seq_type == 0) ? "unknown" : "aa"), sizeof(int *) * 8 )
 // #define FILESAVE
 
@@ -306,3 +306,4 @@ int main(int argc, char **argv)
     free(programfolder);
     return 0;
 }
+
