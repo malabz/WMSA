@@ -2,6 +2,9 @@
 
 A method of Multiple Sequence Alignment, which the writer is Wym6912.
 
+![version](https://anaconda.org/wym6912/wmsa/badges/version.svg) ![last updated](https://anaconda.org/wym6912/wmsa/badges/latest_release_date.svg) ![supported platforms](https://anaconda.org/wym6912/wmsa/badges/platforms.svg) ![conda](https://anaconda.org/wym6912/wmsa/badges/installer/conda.svg)
+
+
 ## Recommended environment
 
 Liunx-based systems, like `Ubuntu`, `CentOS` .

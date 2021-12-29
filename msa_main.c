@@ -7,11 +7,11 @@
 #if REPORTCOSTS
 #include <time.h>
 #endif
-#define VERSION "0.3.3"
+#define VERSION "0.4.0"
 #define SHOWVERSION reporterr( "%s (%s, %d-bit) Version " VERSION "\n\n", "MSA align", (seq_type == 1) ? "nuc" : ((seq_type == 0) ? "unknown" : "aa"), sizeof(int *) * 8 )
 // #define FILESAVE
-
-static int alignmode, calcsp;
+#define MIN(X, Y) ((X) > (Y) ? (Y) : (X))
+static int alignmode, calcsp, simplycheck, profilealignthread;
 
 void print_help_message()
 {
@@ -23,14 +23,16 @@ void print_help_message()
     reporterr("-T: use threads in cd-hit and staralign\n");
     reporterr("-p: Calcuate SP Scores after alignment\n");
     reporterr("-d: print debug info on profilealign, staralign and cd-hit*\n");
+    reporterr("-s: do not simply check the result is ok\n");
     reporterr("-v: only print version\n");
     reporterr("== MAFFT common arguments ==\n");
     reporterr("-V, -f, -S: ppenalty_dist, penalty, nmax_shift\n");
     reporterr("-z, -w: fftthreshold, fftWinsize\n");
-    reporterr("-b: Band in alignment\n");
+    reporterr("-b: Band in alignment, if not provided, use auto detected band\n");
     reporterr("-B: BLOSUM??\n");
     reporterr("=== profilealign arguments ===\n");
     reporterr("-A, -F: Use Simply lign(-A) or FFT align(-F) on profile alignment\n");
+    reporterr("-x: use threads in profilealign, default is min(10, staralign_threads)\n");
     reporterr("== CD-HIT arugments ==\n");
     reporterr("-c: threshold on cd-hit to cluster\n");
     reporterr("-M: max memory for CD-HIT\n");
@@ -54,15 +56,17 @@ void arguments(int argc, char *argv[])
     ppenalty_dist = NOTKNOWNINT;
     fftthreshold = NOTKNOWNINT;
     fftWinSize = NOTKNOWNINT;
-    alignband = 20;
+    alignband = NOTKNOWNINT;
     threads = 1;
     nmax_shift = 1;
     seq_type = 0;
     alignmode = 1;
     calcsp = 0;
-    maxmemory = 1024;
+    maxmemory = 0; // In cd-hit, maxmemory=0 is unlimited
     printdebug = 0;
     BLOSUM = 62;
+    simplycheck = 1;
+    profilealignthread = NOTKNOWNINT;
     while(--argc > 0 && (*++ argv)[0] == '-' )
 	{
         while ( (c = *++ argv[0]) )
@@ -127,6 +131,10 @@ void arguments(int argc, char *argv[])
                 case 'd':
                     printdebug = 1;
                     break;
+                case 'x':
+                    profilealignthread = myatoi(*++ argv, c);
+                    -- argc;
+                    goto nextoption;
 				// CD-HIT arguments
 				case 'c':
 					cdhitsim = myatof( *++ argv, c );
@@ -144,6 +152,9 @@ void arguments(int argc, char *argv[])
                 // common
                 case 'p':
                     calcsp = 1;
+                    break;
+                case 's':
+                    simplycheck = 0;
                     break;
                 case 'H':
                 case '?':
@@ -260,6 +271,8 @@ int main(int argc, char **argv)
     else
     {
         /* Part 3: profile-profile align */
+        if(profilealignthread != NOTKNOWNINT) threads = profilealignthread;
+        else threads = MIN(threads, 10);
         reporterr("profile merging... ");
         checkprofilealign(programfolder, "submafft/profilealign");
         sprintf(cmdstr3, "%scluster_order", tmpdir);
@@ -273,6 +286,21 @@ int main(int argc, char **argv)
 
     reporterr("\n\nDone.\n");
     SHOWVERSION;
+    if(simplycheck && ! calcsp)
+    {
+        input = fopen(outputfile, "rb");
+        if(input == NULL)
+        {
+            reporterr("ERROR: result file is not exist!!\n");
+            return 1;
+        }
+        if(fgetc(input) == EOF)
+        {
+            reporterr("ERROR: result file is empty. please check your arugments and try again.\n");
+            reporterr("It may coursed by small fftWinSize (-w) or sequences is not the high similarity.\n");
+            return 1;
+        }
+    }
     if(calcsp)
     {
         /* SP Scores calcuation */
@@ -306,4 +334,3 @@ int main(int argc, char **argv)
     free(programfolder);
     return 0;
 }
-
