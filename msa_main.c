@@ -7,7 +7,7 @@
 #if REPORTCOSTS
 #include <time.h>
 #endif
-#define VERSION "0.4.2"
+#define VERSION "0.4.3"
 #define SHOWVERSION reporterr( "%s (%s, %d-bit) Version " VERSION "\n\n", "MSA align", (seq_type == 1) ? "nuc" : ((seq_type == 0) ? "unknown" : "aa"), sizeof(int *) * 8 )
 // #define FILESAVE
 #define MIN(X, Y) ((X) > (Y) ? (Y) : (X))
@@ -15,7 +15,13 @@ static int alignmode, calcsp, simplycheck, profilealignthread;
 
 void print_help_message()
 {
-    reporterr("WMSA alignment Version %s help: \n", VERSION);
+    reporterr("WMSA alignment Version %s ", VERSION);
+#ifdef enablemultithread
+    reporterr("(Multi-thread mode)");
+#else
+    reporterr("(Single-thread mode)");
+#endif
+    reporterr(" help: \n");
     reporterr("== Common ==\n");
     reporterr("-i: input file name\n");
     reporterr("-o: output file name\n");
@@ -40,7 +46,12 @@ void print_help_message()
 
 void print_version()
 {
-    reporterr("WMSA verison %s\n", VERSION);
+    reporterr("WMSA verison %s ", VERSION);
+#ifdef enablemultithread
+    reporterr("(Multi-thread mode)\n");
+#else
+    reporterr("(Single-thread mode)\n");
+#endif
 }
 
 void arguments(int argc, char *argv[])
