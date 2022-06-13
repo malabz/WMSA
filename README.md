@@ -50,7 +50,7 @@ unzip mt1x.zip
 /usr/bin/wmsa -i mt1x.fasta -o mt1x.wmsa.fasta -T 16
 ```
 
-For dataset from www.drive5.com/bench, see [here](https://github.com/malabz/WMSA-dataset/benchmark/README.md) for testing in `wmsa` .
+For dataset from www.drive5.com/bench, see [here](https://github.com/malabz/WMSA-dataset/blob/main/benchmark/README.md) for testing in `wmsa` .
 
 ## How to interpret the results
 
