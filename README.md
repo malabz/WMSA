@@ -4,12 +4,11 @@ A method of Multiple Sequence Alignment, which the writer is Wym6912.
 
 ![version](https://anaconda.org/wym6912/wmsa/badges/version.svg) ![last updated](https://anaconda.org/wym6912/wmsa/badges/latest_release_date.svg) ![supported platforms](https://anaconda.org/wym6912/wmsa/badges/platforms.svg) ![conda](https://anaconda.org/wym6912/wmsa/badges/installer/conda.svg)
 
-
 ## Recommended environment
 
 Liunx-based systems, like `Ubuntu`, `CentOS` .
 
-If you are a `Windows 10` user, you can use it by  [`WSL`]([Manually download Windows Subsystem for Linux (WSL) Distros | Microsoft Docs](https://docs.microsoft.com/en-us/windows/wsl/install-manual)) .
+If you are a `Windows 10` user, you can use it by `WSL` ([Manually download Windows Subsystem for Linux (WSL) Distros | Microsoft Docs](https://docs.microsoft.com/en-us/windows/wsl/install-manual)).
 
 ## How to use this program
 
@@ -21,7 +20,7 @@ make install # program is installed on /usr/bin by default
 wmsa -H # help message on this program
 ```
 
-You also can download source code on the release.
+You also can download source code on the [release](https://github.com/malabz/WMSA/releases).
 
 If you are an MACOS user, please use the following `make` command:
 
@@ -35,6 +34,33 @@ You can also use our program in `conda` :
 
 ```bash
 conda install wmsa -c wym6912 
+```
+
+## How to run the method on a test set
+
+The test data is published [here](https://github.com/malabz/WMSA-dataset).
+
+You can clone and use the following project by using this command:
+
+```bash
+git clone https://github.com/malabz/WMSA-dataset
+# test mt1x dataset on WMSA
+cd WMSA-dataset/mt/
+unzip mt1x.zip
+/usr/bin/wmsa -i mt1x.fasta -o mt1x.wmsa.fasta -T 16
+```
+
+For dataset from www.drive5.com/bench, see [here](https://github.com/malabz/WMSA-dataset/benchmark/README.md) for testing in `wmsa` .
+
+## How to interpret the results
+
+For `mt` and `SARS-COV-2` test case, we use `SP Score` to measure the result. The `SP Score` script can be found [here](https://github.com/malabz/MSATOOLS/raw/main/SPscore/SPscore.py).
+
+Use the script test the result by changing the arguments:
+
+```bash
+wget https://github.com/malabz/MSATOOLS/raw/main/SPscore/SPscore.py
+python3 SPscore.py --input mt1x.wmsa.fasta --match 1 --mismatch 0 --gap1 0 --gap2 0
 ```
 
 ## How to upgrade this program
@@ -51,4 +77,3 @@ git submodule foreach 'git pull'
 ```bash
 make uninstall
 ```
-
