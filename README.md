@@ -57,7 +57,7 @@ unzip mt1x.zip
 /usr/bin/wmsa -i mt1x.fasta -o mt1x.wmsa.fasta -T 16 -c 0.9
 ```
 
-The arugments in last line means the input file ( `-i` ) is  `mt1x.fasta `, the output file ( `-o` ) is  `mt1x.wmsa.fasta `, use `16 `threads (` -T` ) and the similarity of cd-hit (` -c` ) in  `wmsa `is `0.9`.
+The arugments in last line means the input file ( `-i` ) is `mt1x.fasta`, the output file ( `-o` ) is `mt1x.wmsa.fasta`, use `16` threads ( `-T` ) and the similarity of cd-hit ( `-c` ) in  `wmsa `is `0.9`.
 
 For dataset from www.drive5.com/bench, see [here](https://github.com/malabz/WMSA-dataset/blob/main/benchmark/README.md) for testing in `wmsa` .
 

@@ -23,7 +23,8 @@ char centerfile[maxf];
 char cmdstr[maxf], cmdstr2[maxf], cmdstr3[maxf];
 
 // tmp directory
-char tmpdir[maxf] = "./swap/";
+char tmpdir[maxf] = "./swap/", *readtmpdir;
+int tmpinthisdir;
 
 char orderprotein[20] = {'A', 'R', 'N', 'D', 'C', 'Q', 'E', 'G', 'H', 'I', 'L', 'K', 'M', 'F', 'P', 'S', 'T', 'W', 'Y', 'V'};
 int BLOSUM62[20][20] = {

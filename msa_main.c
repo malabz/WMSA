@@ -7,7 +7,7 @@
 #if REPORTCOSTS
 #include <time.h>
 #endif
-#define VERSION "0.4.3"
+#define VERSION "0.4.4"
 #define SHOWVERSION reporterr( "%s (%s, %d-bit) Version " VERSION "\n\n", "MSA align", (seq_type == 1) ? "nuc" : ((seq_type == 0) ? "unknown" : "aa"), sizeof(int *) * 8 )
 // #define FILESAVE
 #define MIN(X, Y) ((X) > (Y) ? (Y) : (X))
@@ -31,6 +31,7 @@ void print_help_message()
     reporterr("-d: print debug info on profilealign, staralign and cd-hit*\n");
     reporterr("-s: do not simply check the result is ok\n");
     reporterr("-v: only print version\n");
+    reporterr("-t: temp folder name\n");
     reporterr("== MAFFT common arguments ==\n");
     reporterr("-V, -f, -S: ppenalty_dist, penalty, nmax_shift\n");
     reporterr("-z, -w: fftthreshold, fftWinsize\n");
@@ -78,6 +79,7 @@ void arguments(int argc, char *argv[])
     BLOSUM = 62;
     simplycheck = 1;
     profilealignthread = NOTKNOWNINT;
+    tmpinthisdir = 0;
     while(--argc > 0 && (*++ argv)[0] == '-' )
 	{
         while ( (c = *++ argv[0]) )
@@ -91,6 +93,10 @@ void arguments(int argc, char *argv[])
 					goto nextoption;
                 case 'o':
                     outputfile = *++ argv;
+                    -- argc;
+                    goto nextoption;
+                case 't':
+                    readtmpdir = *++ argv;
                     -- argc;
                     goto nextoption;
                 // Sequence type
@@ -231,6 +237,11 @@ int main(int argc, char **argv)
     programfolder = get_exe_path(programfolder, PATH_MAX + 100);
     if(printdebug) puts(programfolder);
     // now the value programfolder is the right value, and the last place of the folder name is not '/'.
+    if(readtmpdir != NULL)
+    {
+        if(tmpinthisdir) sprintf(tmpdir, "./%s/", readtmpdir);
+        else sprintf(tmpdir, "%s/", readtmpdir);
+    }
     if(maketmpfolder())
     {
         reporterr("Warning: cannot make folder %s\n", tmpdir);

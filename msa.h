@@ -33,7 +33,8 @@ extern char centerfile[];
 extern char cmdstr[], cmdstr2[], cmdstr3[];
 
 // tmp directory
-extern char tmpdir[]; 
+extern char tmpdir[], *readtmpdir;
+extern int tmpinthisdir;
 
 extern char orderprotein[], orderDNA[];
 extern int BLOSUM62[20][20], trans[4][4];
